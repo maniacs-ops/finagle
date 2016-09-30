@@ -374,7 +374,7 @@ abstract class AbstractStreamingTest extends FunSuite with Eventually {
 
 object StreamingTest {
 
-  def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
+  def await[A](f: Future[A]): A = Await.result(f, 60.seconds)
 
   val echo = new Service[Request, Response] {
     def apply(req: Request) = Future.value(ok(req.reader))
