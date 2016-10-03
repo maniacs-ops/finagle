@@ -210,15 +210,15 @@ abstract class AbstractEndToEndTest extends FunSuite with BeforeAndAfter {
       val client = connect(service)
 
       val justRight = Request("/")
-      assert(Await.result(client(justRight), 2.seconds).status == Status.Ok)
+      assert(Await.result(client(justRight), 10.seconds).status == Status.Ok)
 
       val tooMuch = Request("/")
       tooMuch.setChunked(true)
       val w = tooMuch.writer
       w.write(buf("a"*1000)).before(w.close)
-      val res = Await.result(client(tooMuch), 2.seconds)
+      val res = Await.result(client(tooMuch), 10.seconds)
       assert(res.status == Status.RequestEntityTooLarge)
-      Await.ready(client.close(), 5.seconds)
+      Await.ready(client.close(), 30.seconds)
     }
   }
 
@@ -299,7 +299,7 @@ abstract class AbstractEndToEndTest extends FunSuite with BeforeAndAfter {
         assert(res.contentString == "Dtab(2)\n\t/a => /b\n\t/c => /d\n")
       }
 
-      
+
       Await.ready(client.close(), 5.seconds)
     }
 
